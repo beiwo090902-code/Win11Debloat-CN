@@ -1,0 +1,18 @@
+# Runtime state created by Win11Debloat-CN
+/Logs/
+/Backups/
+/Config/LastUsedSettings.json
+
+# Local release output
+/dist/
+
+# Release archives and checksums
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+*.sha256
+*.sha512
+*.md5
