@@ -23,7 +23,7 @@ jobs:
 
           tag="v2026.07.11-zh-CN.1"
           old_zip="Win11Debloat-CN-2026.07.11-zh-CN.1-.zip"
-          new_zip="Win11Debloat-CN-2026.07.11-zh-CN.1-被窝.zip"
+          new_zip="Win11Debloat-CN-2026.07.11-zh-CN.1-Beiwo.zip"
           old_sum="$old_zip.sha256"
           new_sum="$new_zip.sha256"
           expected_hash="f981312aff87273b4e2ab344a085eeb0b5e6caabcef752c0edfd5defb4ca0f7f"
