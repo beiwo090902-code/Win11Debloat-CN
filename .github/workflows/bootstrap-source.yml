@@ -30,7 +30,29 @@ jobs:
           cp "$archive" "$release_dir/$archive_name"
           sha256sum "$release_dir/$archive_name" > "$release_dir/$archive_name.sha256"
 
-          unzip -q "$archive" -d "$unpack_dir"
+          python3 - "$archive" "$unpack_dir" <<'PY'
+          from pathlib import Path, PurePosixPath
+          import shutil
+          import sys
+          import zipfile
+
+          archive = Path(sys.argv[1])
+          destination = Path(sys.argv[2]).resolve()
+          with zipfile.ZipFile(archive) as zip_file:
+              for entry in zip_file.infolist():
+                  normalized = entry.filename.replace("\\", "/")
+                  relative = PurePosixPath(normalized)
+                  if relative.is_absolute() or ".." in relative.parts:
+                      raise RuntimeError(f"Unsafe ZIP entry: {entry.filename}")
+                  target = destination.joinpath(*relative.parts)
+                  if entry.is_dir() or normalized.endswith("/"):
+                      target.mkdir(parents=True, exist_ok=True)
+                      continue
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  with zip_file.open(entry) as source, target.open("wb") as output:
+                      shutil.copyfileobj(source, output)
+          PY
+
           source_root="$(find "$unpack_dir" -mindepth 1 -maxdepth 1 -type d -print -quit)"
           test -n "$source_root"
           cp -a "$source_root"/. "$GITHUB_WORKSPACE"/
